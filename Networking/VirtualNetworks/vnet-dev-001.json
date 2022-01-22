@@ -1,0 +1,71 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virtualNetworkName": {
+            "type": "string",
+            "defaultValue": "vnet-dev-001"
+        },
+        "location": {
+            "type": "string",
+            "defaultValue": "[resourceGroup().location]",
+            "metadata": {
+                "description": "Location for all resources."
+            }
+        },
+        "vnetAddressPrefix": {
+            "type": "string",
+            "defaultValue": "10.0.0.0/16",
+            "metadata": {
+                "description": "Address prefix"
+            }
+        },
+        "subnetFronWebDMZ": {
+            "type": "string",
+            "defaultValue": "snet-dev-front-webDMZ-001"
+        },
+        "subnetFronWebDMZ_addressRange": {
+            "type": "string",
+            "defaultValue": "172.16.0.0/24"
+        },
+        "ddosProtectionPlanEnabled": {
+            "type": "bool",
+            "defaultValue": "[bool('false')]"
+        },
+        "firewallEnabled": {
+            "type": "bool",
+            "defaultValue": "[bool('false')]"
+        },
+        "bastionEnabled": {
+            "type": "bool",
+            "defaultValue": "[bool('false')]"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "name": "[parameters('virtualNetworkName')]",
+            "type": "Microsoft.Network/VirtualNetworks",
+            "apiVersion": "2021-01-01",
+            "location": "[parameters('location')]",
+            "dependsOn": [],
+            "tags": {},
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                    "[parameters('vnetAddressPrefix')]"
+                ]
+                },
+                "subnets": [
+                    {
+                        "name": "[parameters('subnetFronWebDMZ')]",
+                        "properties": {
+                            "addressPrefix": "[parameters('subnetFronWebDMZ_addressRange')]"
+                        }
+                    }
+                ],
+                "enableDdosProtection": "[parameters('ddosProtectionPlanEnabled')]"
+            }
+        }
+    ]
+}

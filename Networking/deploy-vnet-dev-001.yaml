@@ -1,0 +1,20 @@
+name: 'deploy-vnet-dev-001'
+trigger: none
+pr: none
+stages :        
+  - stage: A
+    jobs:
+      - job: deploy_vnet_dev_001
+        steps:
+              - checkout: self
+              - task: AzureResourceManagerTemplateDeployment@3
+                inputs:
+                  deploymentScope: 'Resource Group'
+                  azureResourceManagerConnection: 'rozanskilabdevops'
+                  subscriptionId: '605d27e9-6b33-45bc-ab52-f660ee95721a'
+                  action: 'Create Or Update Resource Group'
+                  resourceGroupName: 'rg-VirtualNetworks-dev-001'
+                  location: 'westeurope'
+                  templateLocation: 'Linked artifact'
+                  csmFile: '$(System.DefaultWorkingDirectory)/VirtualNetworks/vnet-dev-001.json'
+                  deploymentMode: 'Incremental'
